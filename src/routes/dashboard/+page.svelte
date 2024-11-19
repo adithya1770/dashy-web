@@ -3,7 +3,10 @@
     import { supabase } from '../../lib/supabaseClient';
     import { goto } from "$app/navigation";
     import "../../app.css"
-  import { P } from "flowbite-svelte";
+    import { P } from "flowbite-svelte";
+    import { Button } from 'flowbite-svelte';
+    import { Label, Input, ButtonGroup } from 'flowbite-svelte';
+    import { EnvelopeSolid, LockSolid } from 'flowbite-svelte-icons';
     
     let sessionData = null;
     let sessionName = null;
@@ -23,6 +26,8 @@
     let user_name = '';
     let date;
     let timex;
+    let inputText;
+    let outputText;
     
     onMount(async () => {
       try {
@@ -101,6 +106,17 @@
         errorMsg = 'User successfully logged out!';
       }
     }
+
+    const addChore = () => {
+      let choreJSON = [];
+      choreJSON.push(inputText);
+      localStorage.setItem('chore', JSON.stringify(choreJSON));
+    }
+
+    onMount(() => {
+      outputText = JSON.parse(localStorage.getItem('chore'));
+      console.log(outputText, typeof(outputText));
+    })
 </script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=cloud" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -134,46 +150,57 @@
  
 <div id="main" class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6 flex flex-col items-center">
   {#if sessionData}
-    <div class="lg:h-160 lg:w-130 h-170 w-72 bg-black bg-opacity-75 text-white fira-sans-regular shadow-lg p-6 lg:p-8 space-y-4 rounded-3xl">
-      <div class="text-center">
-        <h1 class="text-7xl lg:text-6xl font-bold">Hello!</h1>
-        <h2 class="text-6xl lg:text-5xl fira-sans-bold mt-3">{user_name}</h2>
+    <div class="flex flex-row gap-x-6">
+      <div class="h-130 w-96 bg-black">
+        <h1>fs</h1>
       </div>
-      <div class="flex justify-between items-center text-xl lg:text-2xl">
-        <div class="flex flex-col items-start absolute top-64">
-          <span class="material-symbols-outlined text-3xl mb-1">schedule</span>
-          <p class="fira-sans-bold">{timex}<br>{date}</p>
-          <p class="fira-sans-medium">{locnPlace}</p>
+      <div class="lg:h-135 lg:w-120 h-170 w-72 bg-black bg-opacity-75 text-white border-white border-2 fira-sans-regular shadow-lg p-6 lg:p-8 space-y-4 rounded-3xl">
+        <div class="text-center">
+          <h1 class="text-7xl lg:text-8xl font-bold">Hello!</h1>
+          <h2 class="text-6xl lg:text-5xl fira-sans-bold mt-3">{user_name}</h2>
         </div>
-        <div class="text-right ml-36 mt-32 lg:mt-16 lg:ml-98">
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=cloud" />
-          <span class="material-symbols-outlined">cloud</span>
-          <p class="fira-sans-bold text-5xl">{weather}°C</p>
-          <p>{climate}</p>
+        <div class="flex justify-between items-center text-xl lg:text-2xl">
+          <div class="flex flex-col items-start absolute top-64">
+            <span class="material-symbols-outlined text-3xl mb-1">schedule</span>
+            <p class="fira-sans-bold">{timex}<br>{date}</p>
+            <p class="fira-sans-medium">{locnPlace}</p>
+          </div>
+          <div class="text-right ml-36 mt-32 lg:mt-6 lg:ml-80">
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=cloud" />
+            <span class="material-symbols-outlined">cloud</span>
+            <p class="fira-sans-bold text-5xl">{weather}°C</p>
+            <p>{climate}</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-6 text-sm lg:text-lg">
+          <div class="relative bottom-6 lg:top-10">
+            <p class="fira-sans-bold text-2xl lg:text-4xl">Battery Charge</p>
+            <p class="text-2xl fira-sans-bold">{(battery.batteryCharge)*100}%</p>
+            {#if battery.status}
+                <p>Charging</p>
+            {:else}
+              <p>Not Charging</p>
+            {/if}
+          </div>
+          <div class="ml-4 lg:pl-12 text-right">
+            <p class="fira-sans-bold mt-11 text-2xl lg:text-4xl">Network</p>
+            <p class="text-5xl fira-sans-bold">{network.networkType}</p>
+            <p class="mt-4">{network.speed}Mbps</p>
+          </div>
+        </div>
+        <br>
+        <div class="lg:h-10 lg:w-32 rounded-2xl lg:ml-40 h-10 w-52 ml-4 bg-black hover:bg-white transition-all">
+          <p class="text-3xl lg:text-xl text-black text-center lg:pt-1 fira-sans-bold">{reqIp}</p>
         </div>
       </div>
-
-      <div class="grid grid-cols-2 gap-6 text-sm lg:text-lg">
-        <div class="relative bottom-6 lg:top-10">
-          <p class="fira-sans-bold text-2xl lg:text-4xl">Battery Charge</p>
-          <p class="text-2xl fira-sans-bold">{(battery.batteryCharge)*100}%</p>
-          {#if battery.status}
-              <p>Charging</p>
-          {:else}
-            <p>Not Charging</p>
-          {/if}
-        </div>
-        <div class="ml-4 text-right">
-          <p class="fira-sans-bold mt-11 text-2xl lg:text-4xl">Network</p>
-          <p class="text-5xl fira-sans-bold">{network.networkType}</p>
-          <p class="mt-4">{network.speed}Mbps</p>
-        </div>
-      </div>
-      <br>
-      <div class="lg:h-10 lg:w-32 rounded-2xl lg:ml-44 h-10 w-52 ml-4 bg-black hover:bg-white transition-all">
-        <p class="text-3xl lg:text-xl text-black text-center lg:pt-2 fira-sans-bold">{reqIp}</p>
+      <div class="h-135 w-100 bg-black rounded-3xl border-2 border-white">
+        <Input id="email" type="email" class="w-64 md:w-72 lg:ml-10 ml-2 lg:mt-130" placeholder="gimme some chores!" bind:value={inputText}>
+            <EnvelopeSolid slot="left" class="w-5 h-5 ml-2 lg:ml-10 text-gray-500 dark:text-gray-400" />
+        </Input>
+        <Button class="absolute lg:top-134 lg:right-32" on:click={addChore}>Add!</Button>
       </div>
     </div>
+
     <button
       on:click={signOut}
       class="mt-2 lg:mt-1 py-2 px-8 lg:py-1 lg:px-12 text-black bg-white border-4 border-white rounded-2xl font-bold hover:bg-black hover:text-white transition-all fira-sans-bold">
@@ -183,3 +210,4 @@
     <p class="text-xl text-center fira-sans-bold">Please log in to view your data.</p>
   {/if}
 </div>
+
