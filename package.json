@@ -1,0 +1,38 @@
+{
+	"name": "dashy",
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/kit": "^2.8.0",
+		"@sveltejs/vite-plugin-svelte": "^4.0.0",
+		"autoprefixer": "^10.4.20",
+		"flowbite": "^2.5.2",
+		"flowbite-svelte": "^0.47.3",
+		"flowbite-svelte-icons": "^2.0.2",
+		"postcss": "^8.4.47",
+		"svelte": "^5.0.0",
+		"tailwindcss": "^3.4.14",
+		"vite": "^5.0.3"
+	},
+	"dependencies": {
+		"@emotion/react": "^11.13.3",
+		"@emotion/styled": "^11.13.0",
+		"@fontsource/roboto": "^5.1.0",
+		"@mui/icons-material": "^6.1.6",
+		"@mui/material": "^6.1.6",
+		"@smui/button": "^7.0.0",
+		"@smui/icon-button": "^7.0.0",
+		"@smui/textfield": "^7.0.0",
+		"@supabase/supabase-js": "^2.46.1"
+	},
+	"peerDependencies": {
+		"react": "^17.0.0 || ^18.0.0",
+		"react-dom": "^17.0.0 || ^18.0.0"
+	}
+}
