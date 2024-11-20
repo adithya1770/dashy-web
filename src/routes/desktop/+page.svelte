@@ -39,7 +39,9 @@
             <a href="/desktop/error">
                 <img src="/finder.png" alt="Finder Image" class="hover:bg-blue-800"/>
             </a>
-            <img src="/mpc.png" alt="My Computer" class="mt-8 hover:bg-blue-800" />
+            <a href="/desktop/error">
+                <img src="/mpc.png" alt="My Computer" class="mt-8 hover:bg-blue-800" />
+            </a>
             <a href="https://github.com/adithya1770">
                 <img src="https://ih1.redbubble.net/image.3082652016.7312/raf,360x360,075,t,fafafa:ca443f4786.u2.jpg" alt="Github" class="hover:bg-blue-800 rounded-full mt-8">
             </a>
@@ -52,7 +54,9 @@
         </div>
         <div class="w-full h-16 bg-gray-400 absolute top-135 flex flex-row">
             <div class="h-16 w-52 bg-gray-700 flex flex-row">
-                <img src="/win.png" alt="Windows" class="w-16 h-14 ml-4 mt-2">
+                <a href="https://www.youtube.com/watch?v=oHg5SJYRHA0">
+                    <img src="/win.png" alt="Windows" class="w-16 h-14 ml-4 mt-2">
+                </a>
                 <p class="font-mono text-3xl mt-4 ml-4 font-semibold">Start</p>
             </div>
         </div>
