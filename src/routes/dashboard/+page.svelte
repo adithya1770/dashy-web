@@ -160,7 +160,7 @@
 @media (max-width: 768px) {
     #main {
         height: 225vh;
-        width: 60vh;
+        width: 48.8vh;
     }
 }
 
@@ -239,9 +239,9 @@
             <li class="mt-2 fira-sans-medium">{chore}</li>
           {/each}
         </div>
-    <Input id="email" type="email" class="absolute w-64 sm:w-64 pl-12 top-300 right-5 lg:top-134 lg:right-64 lg:w-52 lg:ml-8" placeholder="gimme some chores!" bind:value={inputText}></Input>
-    <Button class="absolute top-301 right-40 lg:top-134 lg:right-44" on:click={addChore}>Add!</Button>
-    <Button class="absolute top-301 right-16 lg:top-134 lg:right-20" on:click={removeChore}>Remove</Button>
+    <Input id="email" type="email" class="absolute w-64 sm:w-64 pl-12 top-300 right-16 lg:top-134 lg:right-64 lg:w-52 lg:ml-8" placeholder="gimme some chores!" bind:value={inputText}></Input>
+    <Button class="absolute top-301 right-52 lg:top-134 lg:right-44" on:click={addChore}>Add!</Button>
+    <Button class="absolute top-301 right-28 lg:top-134 lg:right-20" on:click={removeChore}>Remove</Button>
       </div>
     </div>
     <div class="lg:mt-0 mt-10 flex flex-row sm:flex-row sm:gap-4 relative">

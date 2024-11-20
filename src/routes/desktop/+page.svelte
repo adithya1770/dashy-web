@@ -30,6 +30,7 @@
         justify-content: center;
         align-items: center;
     }
+
 </style>
 
 <div id="main">
@@ -52,12 +53,12 @@
                 <img src="/reddit.png" alt="Reddit" class="mt-8 hover:bg-blue-800">
             </a>
         </div>
-        <div class="w-full h-16 bg-gray-400 absolute top-135 flex flex-row">
-            <div class="h-16 w-52 bg-gray-700 flex flex-row">
+        <div class="lg:w-full lg:h-16 bg-gray-400 absolute h-10 w-full top-165 lg:top-135 flex flex-row">
+            <div class="lg:h-16 lg:w-52 h-10 w-40 bg-gray-700 flex flex-row">
                 <a href="https://www.youtube.com/watch?v=oHg5SJYRHA0">
-                    <img src="/win.png" alt="Windows" class="w-16 h-14 ml-4 mt-2">
+                    <img src="/win.png" alt="Windows" class="lg:w-16 lg:h-14 w-8 h-8 lg:ml-4 ml-2 mt-2 lg:mt-2">
                 </a>
-                <p class="font-mono text-3xl mt-4 ml-4 font-semibold">Start</p>
+                <p class="font-mono text-3xl lg:mt-4 ml-2 lg:ml-4 mt-1 font-semibold">Start</p>
             </div>
         </div>
     {:else}

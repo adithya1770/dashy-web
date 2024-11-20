@@ -9,5 +9,5 @@
 </style>
 
 <body>
-    <img src="/../error.png" alt="Error" class="ml-130 mt-20">
+    <img src="/../error.png" alt="Error" class="lg:ml-130 lg:mt-20 mt-2 ">
 </body>
