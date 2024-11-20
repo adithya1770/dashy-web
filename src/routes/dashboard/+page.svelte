@@ -108,15 +108,20 @@
     }
 
     const addChore = () => {
-      let choreJSON = [];
+      let choreJSON = localStorage.getItem('chore');
+      choreJSON = JSON.parse(choreJSON);
       choreJSON.push(inputText);
       localStorage.setItem('chore', JSON.stringify(choreJSON));
+      location.reload();
     }
 
     onMount(() => {
       outputText = JSON.parse(localStorage.getItem('chore'));
-      console.log(outputText, typeof(outputText));
     })
+
+    const dskTop = () => {
+      goto('/desktop')
+    }
 </script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=cloud" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -125,6 +130,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" />
 
 <style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    } 
+
     #main{
         background-image: url("https://images.unsplash.com/photo-1708898813108-5f2e49873d44?q=80&w=1856&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
         width: 100%;
@@ -151,7 +160,7 @@
 <div id="main" class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6 flex flex-col items-center">
   {#if sessionData}
     <div class="flex flex-row gap-x-6">
-      <div class="h-130 w-96 bg-black">
+      <div class="h-135 w-120 border-white border-2 bg-black rounded-2xl">
         <h1>fs</h1>
       </div>
       <div class="lg:h-135 lg:w-120 h-170 w-72 bg-black bg-opacity-75 text-white border-white border-2 fira-sans-regular shadow-lg p-6 lg:p-8 space-y-4 rounded-3xl">
@@ -189,23 +198,25 @@
           </div>
         </div>
         <br>
-        <div class="lg:h-10 lg:w-32 rounded-2xl lg:ml-40 h-10 w-52 ml-4 bg-black hover:bg-white transition-all">
+        <div class="lg:h-10 lg:w-32 rounded-2xl lg:ml-36 h-10 w-52 ml-4 bg-black hover:bg-white transition-all">
           <p class="text-3xl lg:text-xl text-black text-center lg:pt-1 fira-sans-bold">{reqIp}</p>
         </div>
       </div>
       <div class="h-135 w-100 bg-black rounded-3xl border-2 border-white">
-        <Input id="email" type="email" class="w-64 md:w-72 lg:ml-10 ml-2 lg:mt-130" placeholder="gimme some chores!" bind:value={inputText}>
-            <EnvelopeSolid slot="left" class="w-5 h-5 ml-2 lg:ml-10 text-gray-500 dark:text-gray-400" />
+        <div class="absolute h-122 w-96 overflow-y-scroll lg:ml-7 lg:mt-5 no-scrollbar">
+          {#each outputText as chore}
+            <li class="mt-2 fira-sans-medium">{chore}</li>
+          {/each}
+        </div>
+        <Input id="email" type="email" class="fixed w-64 md:w-72 lg:ml-10 ml-2 lg:top-134" placeholder="gimme some chores!" bind:value={inputText}>
         </Input>
-        <Button class="absolute lg:top-134 lg:right-32" on:click={addChore}>Add!</Button>
+        <Button class="absolute lg:top-134 lg:right-20" on:click={addChore}>Add!</Button>
       </div>
     </div>
-
-    <button
-      on:click={signOut}
-      class="mt-2 lg:mt-1 py-2 px-8 lg:py-1 lg:px-12 text-black bg-white border-4 border-white rounded-2xl font-bold hover:bg-black hover:text-white transition-all fira-sans-bold">
-      SIGN OUT
-    </button>
+    <div>
+      <button on:click={signOut} class="mt-2 lg:mt-1 py-2 px-8 lg:py-1 lg:ml-9 lg:px-12 bg-black text-white rounded-2xl font-bold hover:bg-white hover:text-black transition-all fira-sans-bold">SIGN OUT</button>
+    <button on:click={dskTop} class="mt-2 lg:mt-1 py-2 px-8 lg:py-1 lg:ml-9 lg:px-12 text-white bg-black rounded-2xl font-bold hover:bg-white hover:text-black transition-all fira-sans-bold">Desktop Emulator</button>
+    </div>
   {:else}
     <p class="text-xl text-center fira-sans-bold">Please log in to view your data.</p>
   {/if}
