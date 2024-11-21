@@ -28,6 +28,11 @@
     let timex;
     let inputText;
     let outputText;
+    let monthx;
+    let monthToString = [
+    "January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December"
+    ];
     
     onMount(async () => {
       try {
@@ -73,6 +78,7 @@
         time = new Date();
         date = time.toDateString();
         timex = time.toLocaleTimeString();
+        monthx = time.getMonth();
         const ip = await getIp();
         reqIp = ip.ip;
         latitude = locationDet.coords.latitude;
@@ -191,7 +197,14 @@
   {#if sessionData}
     <div class="flex lg:flex-row flex-col gap-x-6">
       <div class="lg:h-135 lg:w-110 h-96 w-80 ml-2 lg:ml-10 border-white border-2 bg-black rounded-2xl">
-        <h1>fs</h1>
+        <h1 class="text-4xl fira-sans-bold ml-6 mt-2 lg:ml-24">Expense Tracker</h1>
+        <p class="text-2xl fira-sans-medium mt-4 ml-10 lg:ml-28">Budget for {monthToString[monthx]}</p>
+        // use local storage to get the info
+        <p class="text-2xl fira-sans-medium mt-4 ml-12 lg:ml-28">Today's Expenditure</p><br>
+        <input name="expense" type="text" class="h-8 w-64 ml-8 lg:ml-24"><br>
+        <button class="ml-28 lg:ml-44 h-10 w-28 bg-white rounded-b-3xl text-black fira-sans-bold">Make Entry</button><br>
+        // use local storage to get the info
+        // make a function which adds all values in todays expenditure and checks if it exceeds and alerts if it is more
       </div>
       <div class="lg:h-135 lg:w-120 lg:mt-0 mt-10 h-165 w-80 lg:ml-0 ml-2 bg-black bg-opacity-75 text-white border-white border-2 fira-sans-regular shadow-lg p-6 lg:p-8 space-y-4 rounded-3xl">
         <div class="text-center">
@@ -239,16 +252,16 @@
             <li class="mt-2 fira-sans-medium">{chore}</li>
           {/each}
         </div>
-    <Input id="email" type="email" class="absolute w-64 sm:w-64 pl-12 top-300 right-16 lg:top-134 lg:right-64 lg:w-52 lg:ml-8" placeholder="gimme some chores!" bind:value={inputText}></Input>
+    <Input id="email" type="email" class="absolute w-64 sm:w-64 ml-12 top-300 right-16 lg:top-134 lg:right-64 lg:w-52 lg:ml-8" placeholder="gimme some chores!" bind:value={inputText}></Input>
     <Button class="absolute top-301 right-52 lg:top-134 lg:right-44" on:click={addChore}>Add!</Button>
     <Button class="absolute top-301 right-28 lg:top-134 lg:right-20" on:click={removeChore}>Remove</Button>
       </div>
     </div>
-    <div class="lg:mt-0 mt-10 flex flex-row sm:flex-row sm:gap-4 relative">
+    <div class="lg:ml-16 lg:mt-0 mt-10 flex flex-row sm:flex-row sm:gap-4 relative">
       <button on:click={signOut} class="mt-2 ml-4 lg:mt-1 py-3 px-6 sm:py-4 sm:px-10 lg:py-1 lg:ml-6 lg:px-12 bg-black text-white rounded-2xl font-bold hover:bg-white hover:text-black transition-all fira-sans-bold z-10">
           SIGN OUT
       </button>
-      <button on:click={dskTop} class="mt-2 ml-6 lg:mt-1 py-3 px-6 sm:py-4 sm:px-10 lg:py-1 lg:ml-3 lg:px-12 text-white bg-black rounded-2xl font-bold hover:bg-white hover:text-black transition-all fira-sans-bold z-10">
+      <button on:click={dskTop} class="mt-2 ml-2 lg:mt-1 py-3 px-6 sm:py-4 sm:px-10 lg:py-1 lg:ml-3 lg:px-12 text-white bg-black rounded-2xl font-bold hover:bg-white hover:text-black transition-all fira-sans-bold z-10">
           Desktop Emulator
       </button>
   </div>  
