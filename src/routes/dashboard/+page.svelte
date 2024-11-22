@@ -7,7 +7,8 @@
     import { Button } from 'flowbite-svelte';
     import { Label, Input, ButtonGroup } from 'flowbite-svelte';
     import { EnvelopeSolid, LockSolid } from 'flowbite-svelte-icons';
-    
+
+
     let sessionData = null;
     let sessionName = null;
     let errorMsgNew = '';
@@ -29,11 +30,18 @@
     let inputText;
     let outputText;
     let monthx;
-    let monthToString = [
-    "January", "February", "March", "April", "May", "June", 
-    "July", "August", "September", "October", "November", "December"
+    let dayToString = [
+    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
     ];
-    
+    let nutritionString = '';
+    let nutritionFetchJson = {};
+    let click;
+    let calorieAgainstTime = {};
+    let parsedInfo = {};
+    let parsedInfoArray = [
+      {'Day': 'Monday', 'Cal': 0}
+    ];
+
     onMount(async () => {
       try {
         let { data, error } = await supabase.auth.getSession();
@@ -143,6 +151,29 @@
       localStorage.setItem('chore', JSON.stringify(choreJSON));
       location.reload();
     }
+
+    const getNutrition = async () => {
+        click = click? false : true;
+        const nutritionFetch = await fetch(`https://effective-octo-eureka-h2n4.onrender.com/nutrition?query=${nutritionString}`);
+        const nutritionFetch1 = await nutritionFetch.json();
+        nutritionFetchJson = nutritionFetch1.items[0];
+        let nutritionFetchCalorie = nutritionFetch1.items[0].calories;
+        const time = new Date();
+        const reqDay = dayToString[(time.getDay())-1];
+        calorieAgainstTime['Day'] = reqDay;
+        calorieAgainstTime['Cal'] = nutritionFetchCalorie;
+        localStorage.setItem('calorie', JSON.stringify(calorieAgainstTime));
+    }
+
+    onMount(() => {
+      const calorie = localStorage.getItem('calorie');
+      parsedInfo = JSON.parse(calorie);
+      parsedInfoArray.push(parsedInfo);
+    })
+
+    const wallPaper = () => {
+      goto('/wallpaper');
+    }
 </script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=cloud" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -197,14 +228,19 @@
   {#if sessionData}
     <div class="flex lg:flex-row flex-col gap-x-6">
       <div class="lg:h-135 lg:w-110 h-96 w-80 ml-2 lg:ml-10 border-white border-2 bg-black rounded-2xl">
-        <h1 class="text-4xl fira-sans-bold ml-6 mt-2 lg:ml-24">Expense Tracker</h1>
-        <p class="text-2xl fira-sans-medium mt-4 ml-10 lg:ml-28">Budget for {monthToString[monthx]}</p>
-        // use local storage to get the info
-        <p class="text-2xl fira-sans-medium mt-4 ml-12 lg:ml-28">Today's Expenditure</p><br>
-        <input name="expense" type="text" class="h-8 w-64 ml-8 lg:ml-24"><br>
-        <button class="ml-28 lg:ml-44 h-10 w-28 bg-white rounded-b-3xl text-black fira-sans-bold">Make Entry</button><br>
-        // use local storage to get the info
-        // make a function which adds all values in todays expenditure and checks if it exceeds and alerts if it is more
+        <h1>Nutrition Tracker</h1>
+        <input type="text" class="rounded-3xl text-black pl-14" bind:value={nutritionString} placeholder="enter your prompt"><br>
+        <button class="mt-2 ml-2 lg:mt-1 py-3 px-6 sm:py-4 sm:px-10 lg:py-1 lg:ml-3 lg:px-12 text-white bg-black rounded-2xl font-bold hover:bg-white hover:text-black transition-all fira-sans-bold z-10" on:click={getNutrition}>
+          Get Details
+      </button>
+      {#if click}
+        <p>Cal: {nutritionFetchJson.calories}Kcal</p>
+        <p>Cholerstorl: {nutritionFetchJson.cholesterol_mg}mg</p>
+        <p>Fat: {nutritionFetchJson.fat_total_g}g</p>
+        <p>Protein: {nutritionFetchJson.protein_g}g</p>
+        <p>Carbs: {nutritionFetchJson.carbohydrates_total_g}g</p>
+        <p>Sodium: {nutritionFetchJson.serving_size_g}g</p>
+      {/if}
       </div>
       <div class="lg:h-135 lg:w-120 lg:mt-0 mt-10 h-165 w-80 lg:ml-0 ml-2 bg-black bg-opacity-75 text-white border-white border-2 fira-sans-regular shadow-lg p-6 lg:p-8 space-y-4 rounded-3xl">
         <div class="text-center">
@@ -264,6 +300,9 @@
       <button on:click={dskTop} class="mt-2 ml-2 lg:mt-1 py-3 px-6 sm:py-4 sm:px-10 lg:py-1 lg:ml-3 lg:px-12 text-white bg-black rounded-2xl font-bold hover:bg-white hover:text-black transition-all fira-sans-bold z-10">
           Desktop Emulator
       </button>
+      <button on:click={wallPaper} class="mt-2 ml-2 lg:mt-1 py-3 px-6 sm:py-4 sm:px-10 lg:py-1 lg:ml-3 lg:px-12 text-white bg-black rounded-2xl font-bold hover:bg-white hover:text-black transition-all fira-sans-bold z-10">
+        Wallpapers
+    </button>
   </div>  
   {:else}
     <p class="text-xl text-center fira-sans-bold">Please log in to view your data.</p>
