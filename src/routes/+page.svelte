@@ -56,7 +56,7 @@
   }
 
   const googleSignIn = () => {
-    goto('https://effective-octo-eureka-h2n4.onrender.com')
+    goto('https://effective-octo-eureka-h2n4.onrender.com/oauth')
 
   }
 </script>

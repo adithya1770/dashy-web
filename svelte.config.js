@@ -6,7 +6,7 @@ const config = {
 		// Use the Vercel adapter for deployment
 		adapter: vercel(),
 		csrf: {
-			checkOrigin: true, // Recommended for production
+			checkOrigin: true,
 		}
 	}
 };
