@@ -7,6 +7,7 @@
     import { Button } from 'flowbite-svelte';
     import { Label, Input, ButtonGroup } from 'flowbite-svelte';
     import { EnvelopeSolid, LockSolid } from 'flowbite-svelte-icons';
+    import Chart from './Chart.svelte';
 
 
     let sessionData = null;
@@ -36,12 +37,11 @@
     let nutritionString = '';
     let nutritionFetchJson = {};
     let click;
-    let calorieAgainstTime = {};
+    let calorieAgainstTime = [];
     let parsedInfo = {};
-    let parsedInfoArray = [
-      {'Day': 'Monday', 'Cal': 0}
-    ];
-
+    let parsedInfoArray = [];
+    let googleSession = '';
+    
     onMount(async () => {
       try {
         let { data, error } = await supabase.auth.getSession();
@@ -78,6 +78,11 @@
         const ipAddressReal =  await ipAddress.json();
         return ipAddressReal;
   }
+
+  onMount(() => {
+    let windowSearch = new URLSearchParams(window.location.search);
+    googleSession = windowSearch.get('code');
+  })
   
 
   onMount(async () => {
@@ -117,6 +122,7 @@
       if (error) {
         errorMsg = error;
       } else {
+        googleSession = null;
         window.location.href = '/';
         errorMsg = 'User successfully logged out!';
       }
@@ -156,25 +162,34 @@
         click = click? false : true;
         const nutritionFetch = await fetch(`https://effective-octo-eureka-h2n4.onrender.com/nutrition?query=${nutritionString}`);
         const nutritionFetch1 = await nutritionFetch.json();
+        console.log(nutritionFetch1)
         nutritionFetchJson = nutritionFetch1.items[0];
         let nutritionFetchCalorie = nutritionFetch1.items[0].calories;
         const time = new Date();
         const reqDay = dayToString[(time.getDay())-1];
-        calorieAgainstTime['Day'] = reqDay;
-        calorieAgainstTime['Cal'] = nutritionFetchCalorie;
+        let newParser = {'Day': reqDay, 'Cal': nutritionFetchCalorie};
+        calorieAgainstTime = JSON.parse(localStorage.getItem('calorie')) || [];
+        if (calorieAgainstTime.length > 0) {
+          let prevObj = calorieAgainstTime[calorieAgainstTime.length - 1];
+          newParser.Cal += prevObj.Cal;
+        }
+        calorieAgainstTime.push(newParser);
         localStorage.setItem('calorie', JSON.stringify(calorieAgainstTime));
     }
 
     onMount(() => {
       const calorie = localStorage.getItem('calorie');
-      parsedInfo = JSON.parse(calorie);
-      parsedInfoArray.push(parsedInfo);
+      parsedInfo = JSON.parse(calorie)
+      parsedInfoArray = parsedInfo;
     })
 
     const wallPaper = () => {
       goto('/wallpaper');
     }
+
 </script>
+
+
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=cloud" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -182,6 +197,11 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" />
 
 <style>
+
+    .custom-scrollbar::-webkit-scrollbar{
+      color: white;
+    }
+
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     } 
@@ -196,7 +216,7 @@
 
 @media (max-width: 768px) {
     #main {
-        height: 225vh;
+        height: 250vh;
         width: 48.8vh;
     }
 }
@@ -223,24 +243,26 @@
       font-style: normal;
   }
 </style>
+
  
 <div id="main" class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6 flex flex-col items-center">
-  {#if sessionData}
+  {#if sessionData || googleSession}
     <div class="flex lg:flex-row flex-col gap-x-6">
-      <div class="lg:h-135 lg:w-110 h-96 w-80 ml-2 lg:ml-10 border-white border-2 bg-black rounded-2xl">
-        <h1>Nutrition Tracker</h1>
-        <input type="text" class="rounded-3xl text-black pl-14" bind:value={nutritionString} placeholder="enter your prompt"><br>
-        <button class="mt-2 ml-2 lg:mt-1 py-3 px-6 sm:py-4 sm:px-10 lg:py-1 lg:ml-3 lg:px-12 text-white bg-black rounded-2xl font-bold hover:bg-white hover:text-black transition-all fira-sans-bold z-10" on:click={getNutrition}>
+      <div class="lg:h-135 lg:w-110 h-130 w-80 ml-2 lg:ml-10 border-white border-2 bg-black rounded-2xl">
+        <h1 class="fira-sans-bold text-6xl ml-6 lg:ml-24 mt-10">Nutrition Tracker</h1>
+        <input type="text" class="rounded-3xl text-black pl-14 ml-3 lg:ml-24 mt-10" bind:value={nutritionString} placeholder="what did you have?"><br>
+        <button class="mt-2 mb-2 ml-2 lg:mt4 py-3 px-6 sm:py-4 sm:px-10 lg:py-1 lg:ml-32 lg:px-12 text-white bg-black rounded-2xl font-bold hover:bg-white hover:text-black transition-all fira-sans-bold z-10" on:click={getNutrition}>
           Get Details
       </button>
-      {#if click}
-        <p>Cal: {nutritionFetchJson.calories}Kcal</p>
-        <p>Cholerstorl: {nutritionFetchJson.cholesterol_mg}mg</p>
-        <p>Fat: {nutritionFetchJson.fat_total_g}g</p>
-        <p>Protein: {nutritionFetchJson.protein_g}g</p>
-        <p>Carbs: {nutritionFetchJson.carbohydrates_total_g}g</p>
-        <p>Sodium: {nutritionFetchJson.serving_size_g}g</p>
-      {/if}
+        <div class="text-black bg-white flex space-x-4 overflow-x-scroll custom-scrollbar">
+          <p class="fira-sans-medium ml-2">Calories {nutritionFetchJson.calories}Kcal</p>
+          <p class="fira-sans-medium ml-40">Cholestrol {nutritionFetchJson.cholesterol_mg}mg</p>
+          <p class="fira-sans-medium ml-40">Fat {nutritionFetchJson.fat_total_g}g</p>
+          <p class="fira-sans-medium ml-40">Protein {nutritionFetchJson.protein_g}g</p>
+          <p class="fira-sans-medium ml-40">Carbohydrates {nutritionFetchJson.carbohydrates_total_g}g</p>
+          <p class="fira-sans-medium ml-40">Sodium {nutritionFetchJson.serving_size_g}g</p>
+        </div>
+      <Chart class="lg:h-32 lg:w-64 lg:mt-4 h-12 w-26" {parsedInfoArray}/>
       </div>
       <div class="lg:h-135 lg:w-120 lg:mt-0 mt-10 h-165 w-80 lg:ml-0 ml-2 bg-black bg-opacity-75 text-white border-white border-2 fira-sans-regular shadow-lg p-6 lg:p-8 space-y-4 rounded-3xl">
         <div class="text-center">
@@ -281,16 +303,16 @@
           <p class="text-2xl lg:text-xl text-black text-center lg:pt-1 fira-sans-bold">{reqIp}</p>
         </div>
       </div>
-      <div class="lg:h-135 lg:w-100 h-100 w-80 lg:ml-0 ml-2 lg:mt-0 mt-10 bg-black rounded-3xl border-2 border-white">
+      <div class="lg:h-135 lg:w-100 h-110 w-80 lg:ml-0 ml-2 lg:mt-0 mt-10 bg-black rounded-3xl border-2 border-white">
         <h1 class="text-white text-6xl lg:text-4xl ml-10 lg:ml-36 fira-sans-bold mt-4">Do these</h1>
         <div class="absolute h-122 w-96 overflow-y-scroll lg:ml-7 lg:mt-5 no-scrollbar">
           {#each outputText as chore}
-            <li class="mt-2 fira-sans-medium">{chore}</li>
+            <li class="lg:mt-2 ml-10 mt-4 fira-sans-medium">{chore}</li>
           {/each}
         </div>
-    <Input id="email" type="email" class="absolute w-64 sm:w-64 ml-12 top-300 right-16 lg:top-134 lg:right-64 lg:w-52 lg:ml-8" placeholder="gimme some chores!" bind:value={inputText}></Input>
-    <Button class="absolute top-301 right-52 lg:top-134 lg:right-44" on:click={addChore}>Add!</Button>
-    <Button class="absolute top-301 right-28 lg:top-134 lg:right-20" on:click={removeChore}>Remove</Button>
+    <Input id="email" type="email" class="absolute mt-40 lg:mt-0 w-64 sm:w-64 ml-12 top-300 right-16 lg:top-134 lg:right-64 lg:w-52 lg:ml-8" placeholder="gimme some chores!" bind:value={inputText}></Input>
+    <Button class="absolute top-301 lg:mt-0 mt-44 right-52 lg:top-134 lg:right-44" on:click={addChore}>Add!</Button>
+    <Button class="absolute top-301 lg:mt-0 mt-44 right-28 lg:top-134 lg:right-20" on:click={removeChore}>Remove</Button>
       </div>
     </div>
     <div class="lg:ml-16 lg:mt-0 mt-10 flex flex-row sm:flex-row sm:gap-4 relative">
@@ -308,4 +330,3 @@
     <p class="text-xl text-center fira-sans-bold">Please log in to view your data.</p>
   {/if}
 </div>
-

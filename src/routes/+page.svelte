@@ -54,7 +54,13 @@
           goto('/dashboard');
       }
   }
+
+  const googleSignIn = () => {
+    goto('https://effective-octo-eureka-h2n4.onrender.com')
+
+  }
 </script>
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -82,6 +88,11 @@
       font-family: "Fira Sans", serif;
       font-weight: 700;
       font-style: normal;
+  }
+  .fira-sans-bold-italic {
+      font-family: "Fira Sans", serif;
+      font-weight: 700;
+      font-style: italic;
   }
 </style>
 
@@ -113,7 +124,7 @@
                   <Button color="light" class="ml-2 lg:ml-12 mt-5" on:click={signInWithEmail}>
                       Log in
                   </Button>
-                  <button on:click={signClick} class="ml-4 text-white">didn't sign up?</button>
+                  <button on:click={signClick} class="ml-4 text-white fira-sans-bold-italic">didn't sign up?</button>
                   {#if reqError}
                       <p class="text-white">{reqError.message}</p>
                   {/if}
@@ -137,7 +148,11 @@
                   <Button color="light" class="ml-3 lg:ml-12 mt-6" on:click={signUpNewUser}>
                       Sign up
                   </Button>
-                  <button on:click={signClick} class="ml-4 text-white">already signed up?</button>
+                  <Button color="light" class="ml-3 lg:ml-3 mt-2" on:click={googleSignIn}>
+                    <br>
+                    <img src="/google.png" alt="google" class="h-5 w-5">
+                  </Button>
+                  <button on:click={signClick} class="ml-4 mt-4 text-white fira-sans-bold-italic">already signed up?</button>
                   {#if reqReceipt}
                       <p class="ml-10 mt-6 text-white">Check e-mail for confirmation</p>
                   {/if}
@@ -149,4 +164,3 @@
       </div>
   {/if}
 </div>
-
