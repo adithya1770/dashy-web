@@ -55,9 +55,8 @@
       }
   }
 
-  const googleSignIn = () => {
-    goto('https://effective-octo-eureka-h2n4.onrender.com/oauth')
-
+  var googleSignIn = () => {
+    window.location.href = 'https://effective-octo-eureka-h2n4.onrender.com/oauth';
   }
 </script>
 
