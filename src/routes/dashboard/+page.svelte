@@ -8,7 +8,7 @@
     import { Label, Input, ButtonGroup } from 'flowbite-svelte';
     import { EnvelopeSolid, LockSolid } from 'flowbite-svelte-icons';
     import Chart from './Chart.svelte';
-
+    import bg from './bg.json';
 
     let sessionData = null;
     let sessionName = null;
@@ -41,6 +41,7 @@
     let parsedInfo = {};
     let parsedInfoArray = [];
     let googleSession = '';
+    let wallpaperCnt = '';
     
     onMount(async () => {
       try {
@@ -187,6 +188,14 @@
       goto('/wallpaper');
     }
 
+    onMount(() => {
+      const main = document.getElementById("main");
+      const randNum = Math.floor(Math.random()*5);
+      wallpaperCnt = bg[randNum]['url'];
+      console.log(wallpaperCnt);
+      main.style.backgroundImage = `url(${wallpaperCnt})`;
+    })
+
 </script>
 
 
@@ -197,7 +206,6 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" />
 
 <style>
-
     .custom-scrollbar::-webkit-scrollbar{
       color: white;
     }
@@ -207,7 +215,6 @@
     } 
 
     #main {
-    background-image: url("https://images.unsplash.com/photo-1708898813108-5f2e49873d44?q=80&w=1856&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
     width: 100%;
     background-position: center;
     background-size: cover;
