@@ -5,8 +5,14 @@
     let sessionData;
     let divToggle = false;
     let divToggle2 = false;
+    let divToggle3 = false;
     let userName = null;
     let fileName = null;
+
+    import { GoogleGenerativeAI } from "@google/generative-ai";
+
+    let requestQuery = "";
+    let requestResponse = "";
 
 
     onMount(async () => {
@@ -38,7 +44,12 @@
     })
 
     const divToggler2 = () => {
-        divToggle2 = divToggle2?false:true;
+        divToggle2 = divToggle3?false:true;
+        divToggle = false;
+    }
+
+    const divToggler3 = () => {
+        divToggle3 = divToggle3?false:true;
         divToggle = false;
     }
 
@@ -67,9 +78,22 @@
         a.click(); 
     }
 
+    const responseGenerator = async () => {
+        const genAI = new GoogleGenerativeAI("AIzaSyDvWbqt-8UwhNBZGPbdy-wqqmdgqItN5GM");
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const prompt = `${requestQuery}`;
+        const result = await model.generateContent(prompt);
+        requestResponse = result.response.text();
+    }
+
 </script>
 
 <style>
+
+    .custom::-webkit-scrollbar{
+            display: none;
+        }
+
     :global(html, body) {
         margin: 0;
         padding: 0;
@@ -90,7 +114,18 @@
         align-items: center;
     }
 
+    .source-code-pro {
+    font-family: "Source Code Pro", monospace;
+    font-optical-sizing: auto;
+    font-weight: 500px;
+    font-style: normal;
+    }
+
 </style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Julius+Sans+One&family=Prata&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 
 <div id="main">
     {#if sessionData}
@@ -111,6 +146,9 @@
             <a href="https://www.reddit.com/user/Interesting-Cold-167/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button">
                 <img src="/reddit.png" alt="Reddit" class="mt-8 hover:bg-blue-800">
             </a>
+            <button on:click={divToggler3}>
+                <img src="/specs.png" alt="Specs" class=" hover:bg-blue-800 absolute top-2 left-32" />
+            </button>
         </div>
         <div class="lg:w-full lg:h-16 bg-gray-400 absolute h-10 w-full top-165 lg:top-135 flex flex-row">
             <div class="lg:h-16 lg:w-52 h-10 w-40 bg-gray-700 flex flex-row">
@@ -120,6 +158,25 @@
                 <p class="font-mono text-3xl lg:mt-4 ml-2 lg:ml-4 mt-1 font-semibold">Start</p>
             </div>
         </div>
+        {#if divToggle3}
+            <div class="bg-gray-500 h-120 w-96 lg:h-160 lg:w-120 z-10 source-code-pro">
+                <div class="h-10 w-120 bg-blue-800">
+                    <button on:click={divToggler3}>
+                        <img src="https://preview.redd.it/windows-95-98-tab-buttons-needs-your-help-some-people-have-v0-qa0k1n3tfar81.png?auto=webp&s=c07ee409ab4177c0d8baebb7bfe73734637cda78" alt="" class="h-10 w-32 ml-82">
+                    </button>
+                        <div class="overflow-y-scroll h-80 w-96 lg:h-96 lg:w-111 custom mt-10 fira-sans-medium">
+                            <p class="text-white text-4xl ml-3">{requestQuery}</p>
+                            <br>
+                            <br>
+                            <p class="text-white ml-3">{requestResponse}</p>
+                        </div>  
+                      <div>
+                        <input type="text" class="lg:w-80 lg:mt-28 ml-3 fira-sans-bold lg:ml-6" placeholder="enter your query here!" bind:value={requestQuery}>
+                        <button class="text-white fira-sans-bold lg:ml-64 ml-4 text-xl lg:mt-5 absolute lg:top-134 lg:left-135" on:click={responseGenerator}>Generate</button>
+                      </div>
+                </div>
+            </div>
+        {/if}
         {#if divToggle}
             <div class="bg-gray-500 h-120 w-64 z-10">
                 <div class="h-10 w-64 bg-blue-800">

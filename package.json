@@ -25,6 +25,7 @@
 		"@emotion/react": "^11.13.3",
 		"@emotion/styled": "^11.13.0",
 		"@fontsource/roboto": "^5.1.0",
+		"@google/generative-ai": "^0.21.0",
 		"@mui/icons-material": "^6.1.6",
 		"@mui/material": "^6.1.6",
 		"@smui/button": "^7.0.0",
