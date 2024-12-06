@@ -6,8 +6,15 @@
     let divToggle = false;
     let divToggle2 = false;
     let divToggle3 = false;
+    let divToggle4 = false;
     let userName = null;
     let fileName = null;
+    let compilerData = {};
+    let codeSnippet = `#include<stdio.h>
+        int main(){
+            printf("Hello World");
+            return 0;
+        }`;
 
     import { GoogleGenerativeAI } from "@google/generative-ai";
 
@@ -44,12 +51,17 @@
     })
 
     const divToggler2 = () => {
-        divToggle2 = divToggle3?false:true;
+        divToggle2 = divToggle2?false:true;
         divToggle = false;
     }
 
     const divToggler3 = () => {
         divToggle3 = divToggle3?false:true;
+        divToggle = false;
+    }
+
+    const divToggler4 = () => {
+        divToggle4 = divToggle4?false:true;
         divToggle = false;
     }
 
@@ -85,6 +97,33 @@
         const result = await model.generateContent(prompt);
         requestResponse = result.response.text();
     }
+
+    const compilerRun = async () => {
+        const compilerPayload = {
+            clientId: "9017e2a6af802508a15b40a5b9b4a5ad",
+            clientSecret: "15a673ccac2b06e080ea26edc9f0d0e3672d192474f30811154a7985529140fb",
+            script: `${codeSnippet}`,
+            language: "c",
+            versionIndex: "0",
+            stdin: "",
+            compileOnly: false
+        }
+        const compilerReq = await fetch("https://effective-octo-eureka-h2n4.onrender.com/compiler", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(compilerPayload)
+        })
+
+        if(compilerReq){
+            compilerData = await compilerReq.json();
+        }
+        else{
+            console.log("error");
+        }
+    }
+
 
 </script>
 
@@ -123,6 +162,7 @@
 
 </style>
 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=play_arrow" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Julius+Sans+One&family=Prata&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
@@ -149,6 +189,9 @@
             <button on:click={divToggler3}>
                 <img src="/specs.png" alt="Specs" class=" hover:bg-blue-800 absolute top-2 left-32" />
             </button>
+            <button on:click={divToggler4}>
+                <img src="https://preview.redd.it/the-vs-code-logo-v0-hyvwvj3m8zdb1.png?width=640&crop=smart&auto=webp&s=00e26e2aae03f6d96ee33e82cab6332ef611c65d" alt="VS code"  class=" hover:bg-blue-800 absolute top-28 left-32">
+            </button>
         </div>
         <div class="lg:w-full lg:h-16 bg-gray-400 absolute h-10 w-full top-165 lg:top-135 flex flex-row">
             <div class="lg:h-16 lg:w-52 h-10 w-40 bg-gray-700 flex flex-row">
@@ -162,7 +205,7 @@
             <div class="bg-gray-500 h-120 w-96 lg:h-160 lg:w-120 z-10 source-code-pro">
                 <div class="h-10 w-120 bg-blue-800">
                     <button on:click={divToggler3}>
-                        <img src="https://preview.redd.it/windows-95-98-tab-buttons-needs-your-help-some-people-have-v0-qa0k1n3tfar81.png?auto=webp&s=c07ee409ab4177c0d8baebb7bfe73734637cda78" alt="" class="h-10 w-32 ml-82">
+                        <img src="https://preview.redd.it/windows-95-98-tab-buttons-needs-your-help-some-people-have-v0-qa0k1n3tfar81.png?auto=webp&s=c07ee409ab4177c0d8baebb7bfe73734637cda78" alt="" class="h-10 w-32 ml-99">
                     </button>
                         <div class="overflow-y-scroll h-80 w-96 lg:h-96 lg:w-111 custom mt-10 fira-sans-medium">
                             <p class="text-white text-4xl ml-3">{requestQuery}</p>
@@ -174,6 +217,26 @@
                         <input type="text" class="lg:w-80 lg:mt-28 ml-3 fira-sans-bold lg:ml-6" placeholder="enter your query here!" bind:value={requestQuery}>
                         <button class="text-white fira-sans-bold lg:ml-64 ml-4 text-xl lg:mt-5 absolute lg:top-134 lg:left-135" on:click={responseGenerator}>Generate</button>
                       </div>
+                </div>
+            </div>
+        {/if}
+        {#if divToggle4}
+            <div class="bg-gray-500 h-120 w-64 lg:h-160 lg:w-120 z-10 source-code-pro absolute top-10">
+                <div class="h-10 w-64 lg:h-10 lg:w-120 bg-blue-800">
+                    <button on:click={divToggler4}>
+                        <img src="https://preview.redd.it/windows-95-98-tab-buttons-needs-your-help-some-people-have-v0-qa0k1n3tfar81.png?auto=webp&s=c07ee409ab4177c0d8baebb7bfe73734637cda78" alt="" class="h-10 w-32 lg:ml-99">
+                    </button>
+                    <textarea name="ide" placeholder="start coding!" rows="15" class="ml-0 lg:ml-3 lg:w-100 w-64 cols-23 lg:cols-43" bind:value={codeSnippet}></textarea>                        
+                    <button class="ml-3" on:click={compilerRun}><span class="material-symbols-outlined">
+                        <p class="text-5xl">play_arrow</p>
+                        </span></button>
+                </div>
+                <div class="lg:h-40 lg:w-115 bg-black mt-100 lg:mt-100 overflow-x-scroll overflow-y-scroll custom">
+                    <p class="text-white ml-2 mt-2">{compilerData.output}</p>
+                    <p class="text-white">----------------------------------------</p>
+                    <p class="text-white ml-2">average cpu time :{compilerData.cpuTime}</p>
+                    <p class="text-white ml-2">memory used :{compilerData.memory}</p>
+                    <p class="text-white ml-2">built by adithya ps</p>
                 </div>
             </div>
         {/if}
