@@ -123,7 +123,7 @@
                   <Button color="light" class="ml-2 lg:ml-12 mt-5" on:click={signInWithEmail}>
                       Log in
                   </Button>
-                  <button on:click={signClick} class="ml-4 text-white fira-sans-bold-italic">didn't sign up?</button>
+                  <button on:click={signClick} class="ml-2 text-white fira-sans-bold-italic">didn't sign up?</button>
                   {#if reqError}
                       <p class="text-white">{reqError.message}</p>
                   {/if}
@@ -139,19 +139,19 @@
                   <Input id="name" type="name" class="w-64 ml-2 md:w-72 lg:ml-10 lg:mt-6" placeholder="Your Supercool username" bind:value={name}>
                     <EnvelopeSolid slot="left" class="w-5 h-5 ml-2 lg:ml-10 text-gray-500 dark:text-gray-400" />
                   </Input>
-                  <Label for="input-group-1" class="block mt-6 ml-2 lg:ml-10 text-2xl md:text-4xl text-white">Password</Label>
-                  <Input id="password" type="password" class="w-64 ml-2 md:w-72 lg:ml-10 lg:mt-6" placeholder="Min. 8 Characters" bind:value={password}>
+                  <Label for="input-group-1" class="block mt-2 ml-2 lg:ml-10 text-2xl md:text-4xl text-white">Password</Label>
+                  <Input id="password" type="password" class="w-64 ml-2 md:w-72 lg:ml-10 lg:mt-4" placeholder="Min. 8 Characters" bind:value={password}>
                       <LockSolid slot="left" class="w-5 h-5 ml-2 lg:ml-10 text-gray-500 dark:text-gray-400" />
                   </Input>
                   <br>
-                  <Button color="light" class="ml-3 lg:ml-12 mt-6" on:click={signUpNewUser}>
+                  <Button color="light" class="ml-3 lg:ml-10 mt-0" on:click={signUpNewUser}>
                       Sign up
                   </Button>
-                  <Button color="light" class="ml-3 lg:ml-3 mt-2" on:click={googleSignIn}>
+                  <Button color="light" class="ml-0 lg:ml-3 mt-0" on:click={googleSignIn}>
                     <br>
                     <img src="/google.png" alt="google" class="h-5 w-5">
                   </Button>
-                  <button on:click={signClick} class="ml-4 mt-4 text-white fira-sans-bold-italic">already signed up?</button>
+                  <button on:click={signClick} class="ml-2 mt-4 text-white fira-sans-bold-italic">already signed up?</button>
                   {#if reqReceipt}
                       <p class="ml-10 mt-6 text-white">Check e-mail for confirmation</p>
                   {/if}
