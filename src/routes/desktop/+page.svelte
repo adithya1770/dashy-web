@@ -91,7 +91,7 @@
     }
 
     const responseGenerator = async () => {
-        const genAI = new GoogleGenerativeAI("AIzaSyDvWbqt-8UwhNBZGPbdy-wqqmdgqItN5GM");
+        const genAI = new GoogleGenerativeAI("AIzaSyBCwWdQi0GK9mi_sVEfOGRLjDqBFUnZqwA");
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         const prompt = `${requestQuery}`;
         const result = await model.generateContent(prompt);
